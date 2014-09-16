@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+    d3.csv('/resources/S&P.csv', function(file){
+      // console.log(file);
+      var canvas = d3.select('body').append('svg')
+          .attr('width', 500)
+          .attr('height', 500);
+
+      var binNum = 7;
+
+
+      function renderPoint(i){
+
+        var data = file;
+        // for (var j=0; j<24; j++){
+        //   data.push(file[i-j]);
+        // }
+        //console.log(data);
+
+        var mapFun = data.map(function(x){
+          var datum = Number(x['Return'].replace(',',''))
+          return datum;
+        });
+
+        var hist = d3.layout.histogram()
+          .bins(binNum)
+          (mapFun);
+
+
+        var bars = canvas.selectAll('.bar')
+          .data(hist)
+          .enter()
+          .append('g');
+
+        var min = hist[0][0];
+        var max = hist[binNum][hist[binNum].length - 1];
+
+        bars.append('rect')
+          .attr('x', function(d){return (d.x + 0.26)*(55/d.dx);})
+          .attr('y', function(d){return 0})
+          .attr('width', function(d){return 50;})
+          .attr('height', function(d){return d.y;})
+          .attr('fill', 'steelBlue');
+
+      }
+
+      renderPoint(24);
+
+
+    });
+
+    // TO DO:
+    // determine how many months lookback to use / bins to have
+    // set heights
+    // get histogram right-side-up
+    // get axes labels
+    // get dial that corresponds to adjust date/price with hist
+    //get coloring included
+
+
+    </script>
+  </body>
+</html>
