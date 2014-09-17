@@ -50,10 +50,21 @@
     var speed = 500;
     var binNum = 7;
     var running = true;
+    var renderPoint;
 
     //define menu button functions
     var pause = function(){
       running = false;
+    }
+    var speedUp = function(){
+      if (speed > 100){
+        speed -= 100;
+      }
+    }
+    var slowDown = function(){
+      if (speed < 1000){
+        speed += 100
+      }
     }
     var play = function(){
       running = true;
@@ -61,7 +72,7 @@
 
     }
 
-    d3.csv('/resources/S&P.csv', function(file){
+      d3.csv('/resources/S&P.csv', function(file){
 
 
       // set parameters for canvas and axes
@@ -86,6 +97,7 @@
           .attr('class', 'axis')
           .attr('height', 500);
 
+
       var footer = d3.select('body').append('p');
       $('p').html('some info about how this thing works')
 
@@ -100,7 +112,7 @@
         .attr('transform', 'translate(50,25)')
         .call(yAxis);
 
-      // define global functions for use within renderPoint
+      // define functions for use within renderPoint
       var months = ['January','February','March','April', 'May', 'June','July','August', 'September', 'October', 'November', 'December'];
       var parseDate = function(dateNum){
         dateNum = Number(dateNum.replace(',',''));
@@ -125,7 +137,7 @@
         return ((xMap(max) - xMap(min))/binNum)*(0.95)
       }
 
-      function renderPoint(i){
+      renderPoint = function(i){
         var data = [];
         for (var j=0; j<24; j++){
           data.push(file[i-j]);
@@ -138,7 +150,6 @@
 
         var date = file[i]['Date'];
         var price = file[i]['S&P Price']
-        //console.log(date, price);
 
         $('h1').html(parseDate(date));
         $('h2').html(price);
@@ -148,7 +159,6 @@
           .bins(binNum)
           (mapFun);
 
-        //console.log(hist)
 
         var bars = canvas.selectAll('.bar')
           .data(hist)
@@ -168,34 +178,35 @@
 
         //recursion for animation
         setTimeout(function(){
-          if (running && (counter+1 < file.length)){
+          if (running && (i+1 < file.length)){
             bars.remove();
             counter++;
-            renderPoint(counter);
+            renderPoint(i+1);
           }
         }, speed)
-
       }
 
       renderPoint(counter);
-
 
     });
 
     // TO DO:
     //physical sizing of bins
-    // get dial that corresponds to adjust date/price with hist
     //get coloring included
+    //buttons: play doesn't work because it can't access renderPoint
+    //check that bars are being placed at the correct location
+    //make sure price has two digits
+    //
 
     </script>
     <div class='jumbotron'>
       <h1>January, 1873</h1>
       <h2>5.11</h2>
       <div class='btn-bar'>
-        <span class='glyphicon glyphicon-fast-backward'></span>
         <span class='glyphicon glyphicon-pause' onclick='pause()'></span>
-        <span class='glyphicon glyphicon-play' onclick='play()'></span>
-        <span class='glyphicon glyphicon-fast-forward'></span>
+        <span class='glyphicon glyphicon-play' onclick='play(counter)'></span>
+        <span class='glyphicon glyphicon-forward' onclick='slowDown()' ></span>
+        <span class='glyphicon glyphicon-fast-forward' onclick='speedUp()'></span>
       </div>
     </div>
 
