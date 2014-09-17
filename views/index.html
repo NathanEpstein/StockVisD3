@@ -1,26 +1,78 @@
 <html>
   <head>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style type="text/css">
+      .axis path,
+      .axis line {
+        fill:none;
+        stroke:black;
+        /*shape-rendering: crisp-Edges;*/
+      }
+      .axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+      }
+  </style>
   </head>
   <body>
     <script type="text/javascript">
 
+
     d3.csv('/resources/S&P.csv', function(file){
       // console.log(file);
+
+      var canvasWidth = 550;
+      var canvasHeight = 250;
+      var xPad = 50;
+      var yPad = 50;
+
+
+      var heightScale = d3.scale.linear()
+                        .domain([24,0])
+                        .range([0,canvasHeight - yPad]);
+
+      var widthScale = d3.scale.linear()
+                      .domain([-0.3, 0.7])
+                      .range([0,canvasWidth - xPad]);
+
+      var xAxis = d3.svg.axis()
+                  .scale(widthScale)
+                  .orient('bottom');
+
+      var yAxis = d3.svg.axis()
+                  .scale(heightScale)
+                  .orient('left');
+
       var canvas = d3.select('body').append('svg')
-          .attr('width', 500)
+          .attr('width', canvasWidth)
+          .attr('class', 'axis')
           .attr('height', 500);
+
+
+      //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
+      //PADDING: 25PX ABOVE AND BELOW AXES, 50PX ON THE LEFT
+      canvas.append('g')
+        .attr('transform', 'translate(50,225)')
+        .call(xAxis);
+
+      canvas.append('g')
+        .attr('transform', 'translate(50,25)')
+        .call(yAxis);
+
 
       var binNum = 7;
 
-
       function renderPoint(i){
 
-        var data = file;
-        // for (var j=0; j<24; j++){
-        //   data.push(file[i-j]);
-        // }
-        //console.log(data);
+        var data = [];
+        for (var j=0; j<24; j++){
+          data.push(file[i-j]);
+        }
+
+        //edits made here, console logging wrong
+        var date = file[j]['Date'];
+        var price = file[j]
+        console.log(date, price);
 
         var mapFun = data.map(function(x){
           var datum = Number(x['Return'].replace(',',''))
@@ -31,6 +83,7 @@
           .bins(binNum)
           (mapFun);
 
+        //console.log(hist)
 
         var bars = canvas.selectAll('.bar')
           .data(hist)
@@ -38,14 +91,40 @@
           .append('g');
 
         var min = hist[0][0];
-        var max = hist[binNum][hist[binNum].length - 1];
+        var max = hist[binNum - 1][hist[binNum - 1].length - 1];
+
+        var xMap = function(x){
+          return (50 + (x + 0.3)*canvasWidth) ;
+        }
+
+        //does this actually set height correctly?
+        var yMap = function(y){
+          return (y * 8);
+        }
+
+        var base = function(y){
+          return (225 - yMap(y))
+        }
+
+        var getWidth = function(max, min){
+          return ((xMap(max) - xMap(min))/binNum)*(0.95)
+        }
 
         bars.append('rect')
-          .attr('x', function(d){return (d.x + 0.26)*(55/d.dx);})
-          .attr('y', function(d){return 0})
-          .attr('width', function(d){return 50;})
-          .attr('height', function(d){return d.y;})
+          .attr('x', function(d){return xMap(d.x);})
+          .attr('y', function(d){return base(d.y)})
+          .attr('width', function(d){return getWidth(max,min);})
+          .attr('height', function(d){return yMap(d.y);})
           .attr('fill', 'steelBlue');
+
+
+        //RECURSION FOR ANIMATION - TAKE IT OUT LATER
+        setTimeout(function(){
+          if (i+1 < file.length){
+            bars.remove();
+            renderPoint(i+1);
+          }
+        }, 1)
 
       }
 
@@ -55,8 +134,6 @@
     });
 
     // TO DO:
-    // determine how many months lookback to use / bins to have
-    // set heights
     // get histogram right-side-up
     // get axes labels
     // get dial that corresponds to adjust date/price with hist
