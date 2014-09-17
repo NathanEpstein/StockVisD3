@@ -1,32 +1,70 @@
 <html>
   <head>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <style type="text/css">
+
       .axis path,
       .axis line {
         fill:none;
         stroke:black;
-        /*shape-rendering: crisp-Edges;*/
       }
       .axis text {
         font-family: sans-serif;
         font-size: 11px;
       }
+      h1{
+        font-family: 'Libre Baskerville', serif;
+        text-align: center;
+      }
+      h2{
+        color: #888;
+        font-family: 'Libre Baskerville', serif;
+        text-align: center;
+      }
+      body{
+        text-align: center;
+      }
+      span.glyphicon{
+        font-size: 30px;
+        margin-right: 20px;
+        margin-left: 20px;
+      }
+      .btn-bar{
+        margin-top: 50px;
+      }
+
   </style>
   </head>
   <body>
     <script type="text/javascript">
 
+    //define global variables
+    var canvasWidth = 550;
+    var canvasHeight = 250;
+    var xPad = 50;
+    var yPad = 50;
+    var counter = 24; //initialized to have 2 years of returns in past
+    var speed = 500;
+    var binNum = 7;
+    var running = true;
+
+    //define menu button functions
+    var pause = function(){
+      running = false;
+    }
+    var play = function(){
+      running = true;
+      renderPoint(counter);
+
+    }
 
     d3.csv('/resources/S&P.csv', function(file){
-      // console.log(file);
-
-      var canvasWidth = 550;
-      var canvasHeight = 250;
-      var xPad = 50;
-      var yPad = 50;
 
 
+      // set parameters for canvas and axes
       var heightScale = d3.scale.linear()
                         .domain([24,0])
                         .range([0,canvasHeight - yPad]);
@@ -48,6 +86,9 @@
           .attr('class', 'axis')
           .attr('height', 500);
 
+      var footer = d3.select('body').append('p');
+      $('p').html('some info about how this thing works')
+
 
       //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
       //PADDING: 25PX ABOVE AND BELOW AXES, 50PX ON THE LEFT
@@ -59,25 +100,49 @@
         .attr('transform', 'translate(50,25)')
         .call(yAxis);
 
+      // define global functions for use within renderPoint
+      var months = ['January','February','March','April', 'May', 'June','July','August', 'September', 'October', 'November', 'December'];
+      var parseDate = function(dateNum){
+        dateNum = Number(dateNum.replace(',',''));
+        var month = months[Math.round((Number(dateNum) % 1)/0.01) - 1];
+        var year = Math.floor(Number(dateNum));
+        return (month+', '+year);
+      }
 
-      var binNum = 7;
+      var xMap = function(x){
+        return (50 + (x + 0.3)*canvasWidth) ;
+      }
+
+      var yMap = function(y){
+        return (y*200/24);
+      }
+
+      var base = function(y){
+        return (225 - yMap(y))
+      }
+
+      var getWidth = function(max, min){
+        return ((xMap(max) - xMap(min))/binNum)*(0.95)
+      }
 
       function renderPoint(i){
-
         var data = [];
         for (var j=0; j<24; j++){
-          console.log(file[i-j]);
           data.push(file[i-j]);
         }
 
+      var mapFun = data.map(function(x){
+        var datum = Number(x['Return'].replace(',',''));
+        return datum;
+      });
+
         var date = file[i]['Date'];
         var price = file[i]['S&P Price']
-        console.log(date, price);
+        //console.log(date, price);
 
-        var mapFun = data.map(function(x){
-          var datum = Number(x['Return'].replace(',',''))
-          return datum;
-        });
+        $('h1').html(parseDate(date));
+        $('h2').html(price);
+
 
         var hist = d3.layout.histogram()
           .bins(binNum)
@@ -93,44 +158,26 @@
         var min = hist[0][0];
         var max = hist[binNum - 1][hist[binNum - 1].length - 1];
 
-        var xMap = function(x){
-          return (50 + (x + 0.3)*canvasWidth) ;
-        }
-
-        //does this actually set height correctly?
-        var yMap = function(y){
-          return (y*200/24);
-        }
-
-        var base = function(y){
-          return (225 - yMap(y))
-        }
-
-        var getWidth = function(max, min){
-          return ((xMap(max) - xMap(min))/binNum)*(0.95)
-        }
 
         bars.append('rect')
           .attr('x', function(d){return xMap(d.x);})
-          .attr('y', function(d){
-            console.log(d.y);
-            return base(d.y)})
+          .attr('y', function(d){return base(d.y)})
           .attr('width', function(d){return getWidth(max,min);})
           .attr('height', function(d){return yMap(d.y);})
           .attr('fill', 'steelBlue');
 
-
-        //RECURSION FOR ANIMATION - TAKE IT OUT LATER
+        //recursion for animation
         setTimeout(function(){
-          if (i+1 < file.length){
+          if (running && (counter+1 < file.length)){
             bars.remove();
-            renderPoint(i+1);
+            counter++;
+            renderPoint(counter);
           }
-        }, 100)
+        }, speed)
 
       }
 
-      renderPoint(1000);
+      renderPoint(counter);
 
 
     });
@@ -140,7 +187,17 @@
     // get dial that corresponds to adjust date/price with hist
     //get coloring included
 
-
     </script>
+    <div class='jumbotron'>
+      <h1>January, 1873</h1>
+      <h2>5.11</h2>
+      <div class='btn-bar'>
+        <span class='glyphicon glyphicon-fast-backward'></span>
+        <span class='glyphicon glyphicon-pause' onclick='pause()'></span>
+        <span class='glyphicon glyphicon-play' onclick='play()'></span>
+        <span class='glyphicon glyphicon-fast-forward'></span>
+      </div>
+    </div>
+
   </body>
 </html>
