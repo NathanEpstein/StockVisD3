@@ -66,12 +66,12 @@
 
         var data = [];
         for (var j=0; j<24; j++){
+          console.log(file[i-j]);
           data.push(file[i-j]);
         }
 
-        //edits made here, console logging wrong
-        var date = file[j]['Date'];
-        var price = file[j]
+        var date = file[i]['Date'];
+        var price = file[i]['S&P Price']
         console.log(date, price);
 
         var mapFun = data.map(function(x){
@@ -99,7 +99,7 @@
 
         //does this actually set height correctly?
         var yMap = function(y){
-          return (y * 8);
+          return (y*200/24);
         }
 
         var base = function(y){
@@ -112,7 +112,9 @@
 
         bars.append('rect')
           .attr('x', function(d){return xMap(d.x);})
-          .attr('y', function(d){return base(d.y)})
+          .attr('y', function(d){
+            console.log(d.y);
+            return base(d.y)})
           .attr('width', function(d){return getWidth(max,min);})
           .attr('height', function(d){return yMap(d.y);})
           .attr('fill', 'steelBlue');
@@ -124,18 +126,17 @@
             bars.remove();
             renderPoint(i+1);
           }
-        }, 1)
+        }, 100)
 
       }
 
-      renderPoint(24);
+      renderPoint(1000);
 
 
     });
 
     // TO DO:
-    // get histogram right-side-up
-    // get axes labels
+    //physical sizing of bins
     // get dial that corresponds to adjust date/price with hist
     //get coloring included
 
