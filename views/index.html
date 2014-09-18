@@ -152,7 +152,7 @@
           data.push(file[i-j]);
           ret = ret * (1 + Number(file[i-j]['Return']));
         }
-        console.log(ret);
+        console.log('Return: ',ret);
 
       var mapFun = data.map(function(x){
         var datum = Number(x['Return'].replace(',',''));
@@ -163,7 +163,7 @@
         var price = file[i]['S&P Price']
 
         $('h1').html(parseDate(date));
-        $('h2').html(Number(price).toFixed(2));
+        $('h2').html(Number(price.replace(',','')).toFixed(2));
 
 
         var hist = d3.layout.histogram()
@@ -179,7 +179,7 @@
         var min = hist[0][0];
         var max = hist[binNum - 1][hist[binNum - 1].length - 1];
 
-
+        console.log('hist: '+hist);
         bars.append('rect')
           .attr('x', function(d){return xMap(d.x);})
           .attr('y', function(d){return base(d.y)})
@@ -209,6 +209,7 @@
     //check that bars are being placed at the correct location !
     //code indentation/refactoring
     //include github info
+    //
 
     </script>
     <div class='jumbotron'>
