@@ -72,7 +72,6 @@
       bars.remove();
       running = true;
       renderPoint(counter);
-
     }
 
       d3.csv('/resources/S&P.csv', function(file){
@@ -99,10 +98,6 @@
           .attr('width', canvasWidth)
           .attr('class', 'axis')
           .attr('height', 500);
-
-
-      var footer = d3.select('body').append('p');
-      $('p').html('This visualization shows the changing histogram of the S&P 500 returns. At every month from January 1873 to March 2014, the histogram shows the previous 2 years of monthly returns.Color changes to indicate place in the business cycle.Github Nepstein')
 
 
       //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
@@ -140,11 +135,24 @@
         return ((xMap(max) - xMap(min))/binNum)*(0.95)
       }
 
+      var getColor = function(num){
+        if(num < 1){
+          return 'OrangeRed';
+        }
+        else{
+          return "SteelBlue"
+        }
+      }
+
       renderPoint = function(i){
         var data = [];
+        var ret = 1;
+
         for (var j=0; j<24; j++){
           data.push(file[i-j]);
+          ret = ret * (1 + Number(file[i-j]['Return']));
         }
+        console.log(ret);
 
       var mapFun = data.map(function(x){
         var datum = Number(x['Return'].replace(',',''));
@@ -155,7 +163,7 @@
         var price = file[i]['S&P Price']
 
         $('h1').html(parseDate(date));
-        $('h2').html(price);
+        $('h2').html(Number(price).toFixed(2));
 
 
         var hist = d3.layout.histogram()
@@ -177,7 +185,7 @@
           .attr('y', function(d){return base(d.y)})
           .attr('width', function(d){return getWidth(max,min);})
           .attr('height', function(d){return yMap(d.y);})
-          .attr('fill', 'steelBlue');
+          .attr('fill', getColor(ret));
 
         //recursion for animation
         setTimeout(function(){
@@ -189,17 +197,18 @@
         }, speed)
       }
 
+      var footer = d3.select('body').append('p');
+      $('p').html('This visualization shows the changing histogram of the S&P 500 returns. At every month from January 1873 to March 2014, the histogram shows the previous 2 years of monthly returns.Color changes to indicate place in the business cycle. Github Nepstein')
+
       renderPoint(counter);
 
     });
 
     // TO DO:
     //physical sizing of bins
-    //get coloring included
-    //buttons: play doesn't work because it can't access renderPoint
-    //check that bars are being placed at the correct location
-    //make sure price has two digits
-    //
+    //check that bars are being placed at the correct location !
+    //code indentation/refactoring
+    //include github info
 
     </script>
     <div class='jumbotron'>
