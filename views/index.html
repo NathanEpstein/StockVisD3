@@ -50,6 +50,7 @@
     var speed = 500;
     var binNum = 7;
     var running = true;
+    var bars;
     var renderPoint;
 
     //define menu button functions
@@ -67,6 +68,8 @@
       }
     }
     var play = function(){
+      pause();
+      bars.remove();
       running = true;
       renderPoint(counter);
 
@@ -99,7 +102,7 @@
 
 
       var footer = d3.select('body').append('p');
-      $('p').html('some info about how this thing works')
+      $('p').html('This visualization shows the changing histogram of the S&P 500 returns. At every month from January 1873 to March 2014, the histogram shows the previous 2 years of monthly returns.Color changes to indicate place in the business cycle.Github Nepstein')
 
 
       //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
@@ -160,7 +163,7 @@
           (mapFun);
 
 
-        var bars = canvas.selectAll('.bar')
+        bars = canvas.selectAll('.bar')
           .data(hist)
           .enter()
           .append('g');
