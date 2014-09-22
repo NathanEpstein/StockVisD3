@@ -99,6 +99,21 @@
           .attr('class', 'axis')
           .attr('height', 500);
 
+      var xLabel = canvas.append("text")
+                  .attr("class", "x label")
+                  .attr("text-anchor", "end")
+                  .attr("x", 375)
+                  .attr("y", 275)
+                  .text("S&P 500 Percentage Returns");
+
+      var yLabel = canvas.append("text")
+                  .attr("class", "y label")
+                  .attr("text-anchor", "end")
+                  .attr("y", 9)
+                  .attr('x', -100)
+                  // .attr("dy", "100")
+                  .attr("transform", "rotate(-90)")
+                  .text("Frequency");
 
       //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
       //PADDING: 25PX ABOVE AND BELOW AXES, 50PX ON THE LEFT
@@ -120,7 +135,7 @@
       }
 
       var xMap = function(x){
-        return (50 + (x + 0.3)*canvasWidth) ;
+        return (50 + (x + 0.3)*500) ;
       }
 
       var yMap = function(y){
@@ -132,7 +147,7 @@
       }
 
       var getWidth = function(max, min){
-        return ((xMap(max) - xMap(min))/binNum)*(0.95)
+        return ((xMap(max) - xMap(min))/(binNum))*(0.95)
       }
 
       var getColor = function(num){
@@ -142,6 +157,17 @@
         else{
           return "SteelBlue"
         }
+      }
+
+      var average = function(arr){
+        if (arr.length == 0){
+          return 0;
+        }
+        var sum = 0;
+        for (var k=0; k<arr.length;k++){
+          sum += arr[k];
+        }
+        return (sum/arr.length);
       }
 
       renderPoint = function(i){
@@ -169,21 +195,22 @@
         var hist = d3.layout.histogram()
           .bins(binNum)
           (mapFun);
-
+        //console.log('hist: '+hist);
 
         bars = canvas.selectAll('.bar')
           .data(hist)
           .enter()
           .append('g');
 
+        //console.log('bars: ',bars)
+        console.log(hist);
         var min = hist[0][0];
         var max = hist[binNum - 1][hist[binNum - 1].length - 1];
 
-        console.log('hist: '+hist);
         bars.append('rect')
           .attr('x', function(d){return xMap(d.x);})
           .attr('y', function(d){return base(d.y)})
-          .attr('width', function(d){return getWidth(max,min);})
+          .attr('width', function(d){return d.dx*500*(0.95);})
           .attr('height', function(d){return yMap(d.y);})
           .attr('fill', getColor(ret));
 
@@ -197,16 +224,14 @@
         }, speed)
       }
 
-      var footer = d3.select('body').append('p');
-      $('p').html('This visualization shows the changing histogram of the S&P 500 returns. At every month from January 1873 to March 2014, the histogram shows the previous 2 years of monthly returns.Color changes to indicate place in the business cycle. Github Nepstein')
+      // var footer = d3.select('body').append('p');
+      // $('p').html('<i class="fa fa-github fl-lg">Nathan Epstein</i>')
 
       renderPoint(counter);
 
     });
 
     // TO DO:
-    //physical sizing of bins
-    //check that bars are being placed at the correct location !
     //code indentation/refactoring
     //include github info
     //
