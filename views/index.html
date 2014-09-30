@@ -2,44 +2,11 @@
   <head>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="javascripts/d3-timeline.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/d3.timeline.event-horizon.css" />
+    <script type="text/javascript" src="javascripts/d3.timeline.event-horizon.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <style type="text/css">
-
-      .axis path,
-      .axis line {
-        fill:none;
-        stroke:black;
-      }
-      .axis text {
-        font-family: sans-serif;
-        font-size: 11px;
-      }
-      h1{
-        font-family: 'Libre Baskerville', serif;
-        text-align: center;
-      }
-      h2{
-        color: #888;
-        font-family: 'Libre Baskerville', serif;
-        text-align: center;
-      }
-      body{
-        text-align: center;
-      }
-
-      span.glyphicon{
-        font-size: 30px;
-        margin-right: 20px;
-        margin-left: 20px;
-      }
-      .btn-bar{
-        margin-top: 50px;
-      }
-
-
-  </style>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
   </head>
   <body>
     <script type="text/javascript">
@@ -100,7 +67,7 @@
       var canvas = d3.select('body').append('svg')
           .attr('width', canvasWidth)
           .attr('class', 'axis')
-          .attr('height', 500);
+          .attr('height', 350);
 
 
       var xLabel = canvas.append("text")
@@ -128,6 +95,30 @@
       canvas.append('g')
         .attr('transform', 'translate(50,25)')
         .call(yAxis);
+
+      //timeline stuff here
+      //
+      var canvas2 = d3.select('body').append('div')
+                    .attr('id', "timeline");
+      var context = [
+          { 'name': 'Panic of 1907', 'start': 1906.75, 'end': 1907.9167 },
+          { 'name': 'World War 1', 'start': 1914.67, 'end': 1918.9167 },
+          { 'name': 'Great Depression', 'start': 1929.67, 'end': 1932.4167 },
+          { 'name': 'World War 2', 'start': 1939, 'end': 1945  },
+          { 'name': 'Oil Crisis', 'start': 1972.9167, 'end': 1974.67 },
+          { 'name': '1987 Crash', 'start': 1987.67, 'end': 1987.833 },
+          { 'name': 'Dotcom Bubble', 'start': 2000.67, 'end': 2002.75 },
+          { 'name': 'Great Recession', 'start': 2007.833, 'end': 2009.167 },
+          { 'name': 'Start', 'start': 1873, 'end': 2014 },
+        ];
+
+      var tl = new timeline("timeline", context);
+      tl.draw();
+
+      var events = d3.select('timeline-event timeline-event-item');
+      console.log(events);
+
+
 
       // define functions for use within renderPoint
       var months = ['January','February','March','April', 'May', 'June','July','August', 'September', 'October', 'November', 'December'];
@@ -213,6 +204,7 @@
           .attr('width', function(d){return d.dx*500*(0.95);})
           .attr('height', function(d){return yMap(d.y);})
           .attr('fill', getColor(ret));
+
 
         //recursion for animation
         setTimeout(function(){

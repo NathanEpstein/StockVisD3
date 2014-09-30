@@ -6,3 +6,35 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.axis path,
+.axis line {
+  fill:none;
+  stroke:black;
+}
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+}
+h1{
+  font-family: 'Libre Baskerville', serif;
+  text-align: center;
+}
+h2{
+  color: #888;
+  font-family: 'Libre Baskerville', serif;
+  text-align: center;
+}
+body{
+  text-align: center;
+}
+
+span.glyphicon{
+  font-size: 30px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.btn-bar{
+  margin-top: 50px;
+}
