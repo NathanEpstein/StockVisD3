@@ -1,7 +1,8 @@
 <html>
   <head>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="javascripts/d3-timeline.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <style type="text/css">
@@ -27,6 +28,7 @@
       body{
         text-align: center;
       }
+
       span.glyphicon{
         font-size: 30px;
         margin-right: 20px;
@@ -35,6 +37,7 @@
       .btn-bar{
         margin-top: 50px;
       }
+
 
   </style>
   </head>
@@ -98,6 +101,7 @@
           .attr('width', canvasWidth)
           .attr('class', 'axis')
           .attr('height', 500);
+
 
       var xLabel = canvas.append("text")
                   .attr("class", "x label")
@@ -178,7 +182,6 @@
           data.push(file[i-j]);
           ret = ret * (1 + Number(file[i-j]['Return']));
         }
-        console.log('Return: ',ret);
 
       var mapFun = data.map(function(x){
         var datum = Number(x['Return'].replace(',',''));
@@ -195,15 +198,12 @@
         var hist = d3.layout.histogram()
           .bins(binNum)
           (mapFun);
-        //console.log('hist: '+hist);
 
         bars = canvas.selectAll('.bar')
           .data(hist)
           .enter()
           .append('g');
 
-        //console.log('bars: ',bars)
-        console.log(hist);
         var min = hist[0][0];
         var max = hist[binNum - 1][hist[binNum - 1].length - 1];
 
@@ -223,18 +223,8 @@
           }
         }, speed)
       }
-
-      // var footer = d3.select('body').append('p');
-      // $('p').html('<i class="fa fa-github fl-lg">Nathan Epstein</i>')
-
       renderPoint(counter);
-
     });
-
-    // TO DO:
-    //code indentation/refactoring
-    //include github info
-    //
 
     </script>
     <div class='jumbotron'>
@@ -247,6 +237,6 @@
         <span class='glyphicon glyphicon-fast-forward' onclick='speedUp()'></span>
       </div>
     </div>
-
   </body>
+
 </html>
