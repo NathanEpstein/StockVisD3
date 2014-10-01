@@ -1,5 +1,5 @@
 //TO DO
-// 1) render lines correctly on plot graph (DONE)
+// 1) WHAT THE FUCK IS HAPPENING IN 1907/1908??
 // 2) make timeline draggable/clickable
 // 3) make timeline size responsive
 

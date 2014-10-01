@@ -199,22 +199,28 @@ var play = function(){
 
     //UPDATE PLOT CANVAS HERE
     var tempArray = [];
+    var maxP = -10^6;
+    var minP = 10^6;
     var priceArray = [];
     for (var m=0; m<24; m++){
-      tempArray.push(Number(file[m-23+i]['S&P Price'].replace(',','')));
-      priceArray.push(Number(file[m-23+i]['S&P Price'].replace(',','')));
-
+      var val = Number(file[m-23+i]['S&P Price'].replace(',',''));
+      priceArray.push(val);
+      if (val > maxP){
+        maxP = val;
+      }
+      if (val < minP){
+        minP = val;
+      }
     }
 
-    var sortedArray = tempArray.sort();
+    // var sortedArray = tempArray.sort();
 
-    console.log('after: ', priceArray)
+    // console.log('priceArray: ', priceArray)
+    // console.log('sortedArray: ',sortedArray)
+    // var maxP = sortedArray[sortedArray.length -1];
+    // var minP = sortedArray[0];
 
-    var maxP = sortedArray[sortedArray.length -1];
-    var minP = sortedArray[0];
-
-
-    //need min/max price not return. get from price array
+    console.log('min, max: ', minP, maxP)
     var heightScale2 = d3.scale.linear()
                         .domain([maxP,minP])
                         //.domain([maxP, minP])
