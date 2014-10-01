@@ -1,7 +1,7 @@
 //TO DO
-// 1) WHAT THE FUCK IS HAPPENING IN 1907/1908??
 // 2) make timeline draggable/clickable
 // 3) make timeline size responsive
+// 4) show date on timeline
 
 // inside the update function
 

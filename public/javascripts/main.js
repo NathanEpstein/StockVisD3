@@ -213,13 +213,6 @@ var play = function(){
       }
     }
 
-    // var sortedArray = tempArray.sort();
-
-    // console.log('priceArray: ', priceArray)
-    // console.log('sortedArray: ',sortedArray)
-    // var maxP = sortedArray[sortedArray.length -1];
-    // var minP = sortedArray[0];
-
     console.log('min, max: ', minP, maxP)
     var heightScale2 = d3.scale.linear()
                         .domain([maxP,minP])
@@ -276,7 +269,7 @@ var play = function(){
                 .attr('x2', xMap2(n))
                 .attr('y1',(yMap2(priceArray[n-1])))
                 .attr('y2',(yMap2(priceArray[n])))
-                .attr('stroke-width', 1);
+                .attr('stroke-width', 1.5);
       lines.push(line);
     }
 
