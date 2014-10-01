@@ -90,11 +90,6 @@ var play = function(){
     .attr('transform', 'translate(50,25)')
     .call(yAxis);
 
-  //timeline stuff here
-  //
-  // var scrub = d3.select('#timeline')
-  //               //.attr('class', 'jumbotron')
-  //               .attr('id', "timeline");
 
 
   var context = [
@@ -132,6 +127,13 @@ var play = function(){
   var yMap = function(y){
     return (y*200/24);
   }
+
+  // x goes from 0 to 23
+  // 0 maps to 0, 23 maps to 500
+  var xMap2 = function(x){
+    return (50 + (x*500/23)) ;
+  }
+
 
   var base = function(y){
     return (225 - yMap(y))
@@ -196,14 +198,26 @@ var play = function(){
 
 
     //UPDATE PLOT CANVAS HERE
-
+    var tempArray = [];
     var priceArray = [];
     for (var m=0; m<24; m++){
-      priceArray.push(file[m-24+i]['S&P Price']);
+      tempArray.push(Number(file[m-23+i]['S&P Price'].replace(',','')));
+      priceArray.push(Number(file[m-23+i]['S&P Price'].replace(',','')));
+
     }
 
+    var sortedArray = tempArray.sort();
+
+    console.log('after: ', priceArray)
+
+    var maxP = sortedArray[sortedArray.length -1];
+    var minP = sortedArray[0];
+
+
+    //need min/max price not return. get from price array
     var heightScale2 = d3.scale.linear()
-                        .domain([max+Math.abs(max)*0.25,min-Math.abs(min)*0.25])
+                        .domain([maxP,minP])
+                        //.domain([maxP, minP])
                         .range([0,canvasHeight - yPad]);
 
     var widthScale2 = d3.scale.linear()
@@ -224,9 +238,9 @@ var play = function(){
                   .attr("text-anchor", "end")
                   .attr("x", 375)
                   .attr("y", 275)
-                  .text("S&P 500 Trailing 24 Months: "+date);
+                  .text("S&P 500 Trailing 24 Months: "+parseDate(date));
 
-    var yLabel2 = canvas.append("text")
+    var yLabel2 = canvas2.append("text")
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
                 .attr("y", 9)
@@ -235,15 +249,30 @@ var play = function(){
                 .attr("transform", "rotate(-90)")
                 .text("Price");
 
-    canvas2.append('g')
+    var xAxisDraw = canvas2.append('g')
         .attr('transform', 'translate(50,225)')
         .call(xAxis2);
 
-    canvas2.append('g')
+    var yAxisDraw = canvas2.append('g')
         .attr('transform', 'translate(50,25)')
         .call(yAxis2);
 
+    // minP maps to 0px, maxP maps to 200
+    var yMap2 = function(y){
+      var mapVal = ((y - minP)/(maxP-minP))*200;
+      return (225 - mapVal);
+    }
 
+    var lines = [];
+    for (var n=1; n<priceArray.length; n++){
+      var line = canvas2.append('line')
+                .attr('x1', xMap2(n-1))
+                .attr('x2', xMap2(n))
+                .attr('y1',(yMap2(priceArray[n-1])))
+                .attr('y2',(yMap2(priceArray[n])))
+                .attr('stroke-width', 1);
+      lines.push(line);
+    }
 
 
     //END OF PLOT CANVAS UPDATE
@@ -257,13 +286,22 @@ var play = function(){
 
 
     //recursion for animation
-    // setTimeout(function(){
-    //   if (running && (i+1 < file.length)){
-    //     bars.remove();
-    //     counter++;
-    //     renderPoint(i+1);
-    //   }
-    // }, speed)
+    setTimeout(function(){
+      if (running && (i+1 < file.length)){
+        bars.remove();
+
+        xAxisDraw.remove();
+        yAxisDraw.remove();
+        xLabel2.remove();
+        yLabel2.remove();
+        lines.forEach(function(line,index){
+          line.remove();
+        });
+
+        counter++;
+        renderPoint(i+1);
+      }
+    }, speed)
   }
   renderPoint(counter);
 });

@@ -1,3 +1,8 @@
+//TO DO
+// 1) render lines correctly on plot graph (DONE)
+// 2) make timeline draggable/clickable
+// 3) make timeline size responsive
+
 // inside the update function
 
 var priceArray = [];
@@ -27,9 +32,9 @@ var xLabel2 = canvas2.append("text")
               .attr("text-anchor", "end")
               .attr("x", 375)
               .attr("y", 275)
-              .text("S&P 500 Trailing 24 Months: "+date);
+              .text("S&P 500 Trailing 24 Months: "+parseDate(date));
 
-var yLabel2 = canvas.append("text")
+var yLabel2 = canvas2.append("text")
             .attr("class", "y label")
             .attr("text-anchor", "end")
             .attr("y", 9)
@@ -45,5 +50,11 @@ canvas2.append('g')
 canvas2.append('g')
     .attr('transform', 'translate(50,25)')
     .call(yAxis2);
+
+
+//AXES DEFINED ABOVE
+
+
+
 
 
