@@ -60,8 +60,8 @@ var play = function(){
   var canvas2 = d3.select('#plot').append('svg')
         .attr('width', canvasWidth)
         .attr('class', 'axis')
-        //.attr('class', 'jumbotron')
         .attr('height', 350);
+
 
 
   var xLabel = canvas.append("text")
@@ -108,6 +108,17 @@ var play = function(){
   tl.draw();
 
   var events = d3.select('timeline-event timeline-event-item');
+
+
+  $(window).resize(function(){
+    $('#timeline svg').remove();
+
+    //var tl = new timeline("timeline", context);
+    tl.draw();
+
+    var events = d3.select('timeline-event timeline-event-item');
+
+  });
 
 
 
@@ -213,7 +224,6 @@ var play = function(){
       }
     }
 
-    console.log('min, max: ', minP, maxP)
     var heightScale2 = d3.scale.linear()
                         .domain([maxP,minP])
                         //.domain([maxP, minP])
