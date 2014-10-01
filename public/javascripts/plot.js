@@ -1,6 +1,6 @@
 //TO DO
 // 2) make timeline draggable/clickable
-// 3) make timeline size responsive
+
 // 4) show date on timeline
 
 // inside the update function
@@ -53,6 +53,13 @@ canvas2.append('g')
 
 
 //AXES DEFINED ABOVE
+
+
+// LETS GET THE TIMELINE CLICKING BELOW
+
+
+
+
 
 
 

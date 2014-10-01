@@ -10,6 +10,13 @@ var running = true;
 var bars;
 var renderPoint;
 
+//global vars: xlabel2, ylabel2, yaxisdraw,xaxisdraw,lines
+var xLabel2;
+var ylabel2;
+var yAxisDraw;
+var xAxisDraw;
+var lines;
+
 //define menu button functions
 var pause = function(){
   running = false;
@@ -109,16 +116,27 @@ var play = function(){
 
   var events = d3.select('timeline-event timeline-event-item');
 
+  // TIMELINE CLICKING STUFF GOES HERE (also window resizing)
+  //events 18-26 are the click points
 
+  //indexes for renderPoint to jump to
+
+
+
+  //THIS MAKES TIMELINE RESPONSIVE
   $(window).resize(function(){
     $('#timeline svg').remove();
 
-    //var tl = new timeline("timeline", context);
     tl.draw();
 
     var events = d3.select('timeline-event timeline-event-item');
 
+
   });
+
+
+  //timeline rect + onclick events to set renderPoint call on the timeline
+ // make showing the appropriate point part of renderpoint
 
 
 
@@ -242,14 +260,14 @@ var play = function(){
                 .orient('left');
 
 
-    var xLabel2 = canvas2.append("text")
+    xLabel2 = canvas2.append("text")
                   .attr("class", "x label")
                   .attr("text-anchor", "end")
                   .attr("x", 375)
                   .attr("y", 275)
                   .text("S&P 500 Trailing 24 Months: "+parseDate(date));
 
-    var yLabel2 = canvas2.append("text")
+    yLabel2 = canvas2.append("text")
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
                 .attr("y", 9)
@@ -258,11 +276,11 @@ var play = function(){
                 .attr("transform", "rotate(-90)")
                 .text("Price");
 
-    var xAxisDraw = canvas2.append('g')
+    xAxisDraw = canvas2.append('g')
         .attr('transform', 'translate(50,225)')
         .call(xAxis2);
 
-    var yAxisDraw = canvas2.append('g')
+    yAxisDraw = canvas2.append('g')
         .attr('transform', 'translate(50,25)')
         .call(yAxis2);
 
@@ -272,7 +290,7 @@ var play = function(){
       return (225 - mapVal);
     }
 
-    var lines = [];
+    lines = [];
     for (var n=1; n<priceArray.length; n++){
       var line = canvas2.append('line')
                 .attr('x1', xMap2(n-1))
@@ -312,5 +330,24 @@ var play = function(){
       }
     }, speed)
   }
+
+  var points = [420,516,696,816,1212,1392,1548,1632,24];
+  points.forEach(function(point,index){
+    var item = $('.timeline-event-item')[index+1];
+    $(item).click(function(){
+      bars.remove();
+      xAxisDraw.remove();
+      yAxisDraw.remove();
+      xLabel2.remove();
+      yLabel2.remove();
+      lines.forEach(function(line,index){
+        line.remove();
+      });
+      counter = point;
+      pause();
+      renderPoint(counter);
+    });
+  });
+
   renderPoint(counter);
 });
