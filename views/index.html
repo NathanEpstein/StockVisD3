@@ -11,18 +11,23 @@
 
   </head>
   <body>
+
     <script src="javascripts/main.js"></script>
+    <a href="https://github.com/NathanEpstein/StockVisD3"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
     <div class='row jumbotron'>
       <div id="timeline">
-        <h1>Timeline</h1>
-        <!-- <p id="date">January, 1873</p> -->
-        <!-- <h2>5.11</h2> -->
+        <h1>S&P Through History</h1>
+      </div>
+      <div id="ctrl">
+        <span class='glyphicon glyphicon-pause' onclick="pause()"></span>
+        <span class='glyphicon glyphicon-play' onclick="play()"></span>
+<!--        <span class='glyphicon glyphicon-step-forward' onclick="slowDown()"></span>
+       <span class='glyphicon glyphicon-fast-forward' onclick="speedUp()"></span> -->
       </div>
     </div>
     <div class="row">
       <div id="plot" class="col-lg-6 col-sm-12"></div>
       <div id="hist" class="col-lg-6 col-sm-12"></div>
     </div>
-
   </body>
 </html>

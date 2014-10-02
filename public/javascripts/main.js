@@ -4,9 +4,9 @@ var canvasHeight = 250;
 var xPad = 50;
 var yPad = 50;
 var counter = 24; //initialized to have 2 years of returns in past
-var speed = 500;
+var speed = 250;
 var binNum = 7;
-var running = true;
+var running = false;
 var bars;
 var renderPoint;
 
@@ -34,6 +34,13 @@ var slowDown = function(){
 var play = function(){
   pause();
   bars.remove();
+  xAxisDraw.remove();
+  yAxisDraw.remove();
+  xLabel2.remove();
+  yLabel2.remove();
+  lines.forEach(function(line,index){
+    line.remove();
+  });
   running = true;
   renderPoint(counter);
 }
@@ -131,6 +138,14 @@ var play = function(){
 
     var events = d3.select('timeline-event timeline-event-item');
 
+    var points = [420,516,696,816,1212,1392,1548,1632,24];
+    points.forEach(function(point,index){
+      var item = $('.timeline-event-item')[index+1];
+      $(item).click(function(){
+        counter = point;
+      });
+    });
+
 
   });
 
@@ -210,7 +225,6 @@ var play = function(){
     var price = file[i]['S&P Price'];
 
     $('#date').html(parseDate(date));
-    $('h2').html(Number(price.replace(',','')).toFixed(2));
 
 
     var hist = d3.layout.histogram()
@@ -325,8 +339,7 @@ var play = function(){
           line.remove();
         });
 
-        counter++;
-        renderPoint(i+1);
+        renderPoint(++counter);
       }
     }, speed)
   }
@@ -335,17 +348,7 @@ var play = function(){
   points.forEach(function(point,index){
     var item = $('.timeline-event-item')[index+1];
     $(item).click(function(){
-      bars.remove();
-      xAxisDraw.remove();
-      yAxisDraw.remove();
-      xLabel2.remove();
-      yLabel2.remove();
-      lines.forEach(function(line,index){
-        line.remove();
-      });
       counter = point;
-      pause();
-      renderPoint(counter);
     });
   });
 
