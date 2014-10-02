@@ -11,6 +11,10 @@ var date;
 var bars;
 var renderPoint;
 
+var setSpeed = function(value){
+  speed = 500 - value;
+}
+
 var clickBool = false;
 $(window).click(function(){
   clickBool = true;

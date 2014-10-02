@@ -35,6 +35,10 @@ a {
   text-align: left;
 }
 
+#fader{
+  width: 15%;
+}
+
 h1{
   font-family: 'Libre Baskerville', serif;
   text-align: center;

@@ -21,8 +21,8 @@
       <div id="ctrl">
         <span class='glyphicon glyphicon-pause' onclick="pause()"></span>
         <span class='glyphicon glyphicon-play' onclick="play()"></span>
-<!--        <span class='glyphicon glyphicon-step-forward' onclick="slowDown()"></span>
-       <span class='glyphicon glyphicon-fast-forward' onclick="speedUp()"></span> -->
+        <!-- <label for=fader>Speed</label> -->
+        <input type=range min=0 max=475 value=100 onchange="setSpeed(value)" id=fader>
       </div>
     </div>
     <div class="row">
