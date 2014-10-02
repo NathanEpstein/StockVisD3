@@ -7,8 +7,14 @@ var counter = 24; //initialized to have 2 years of returns in past
 var speed = 250;
 var binNum = 7;
 var running = false;
+var date;
 var bars;
 var renderPoint;
+
+var clickBool = false;
+$(window).click(function(){
+  clickBool = true;
+})
 
 //global vars: xlabel2, ylabel2, yaxisdraw,xaxisdraw,lines
 var xLabel2;
@@ -104,8 +110,6 @@ var play = function(){
     .attr('transform', 'translate(50,25)')
     .call(yAxis);
 
-
-
   var context = [
       { 'name': 'Panic of 1907', 'start': 1906, 'end': 1907},
       { 'name': 'World War 1', 'start': 1914, 'end': 1918 },
@@ -119,24 +123,25 @@ var play = function(){
     ];
 
   var tl = new timeline("timeline", context);
-  tl.draw();
-
-  var events = d3.select('timeline-event timeline-event-item');
-
-  // TIMELINE CLICKING STUFF GOES HERE (also window resizing)
-  //events 18-26 are the click points
-
-  //indexes for renderPoint to jump to
-
+  // var year = Math.floor(Number(date.replace(',','')));
+  var event = {
+    'start': 1873,
+    'end':1873
+  }
+  tl.draw(event);
 
 
   //THIS MAKES TIMELINE RESPONSIVE
   $(window).resize(function(){
     $('#timeline svg').remove();
+    var year = Math.floor(Number(date.replace(',','')));
+    var event = {
+      'start': year,
+      'end':year
+      }
+    tl.draw(event);
 
-    tl.draw();
-
-    var events = d3.select('timeline-event timeline-event-item');
+    //var events = d3.select('timeline-event timeline-event-item');
 
     var points = [420,516,696,816,1212,1392,1548,1632,24];
     points.forEach(function(point,index){
@@ -148,11 +153,6 @@ var play = function(){
 
 
   });
-
-
-  //timeline rect + onclick events to set renderPoint call on the timeline
- // make showing the appropriate point part of renderpoint
-
 
 
   // define functions for use within renderPoint
@@ -216,15 +216,45 @@ var play = function(){
       ret = ret * (1 + Number(file[i-j]['Return']));
     }
 
-  var mapFun = data.map(function(x){
-    var datum = Number(x['Return'].replace(',',''));
-    return datum;
-  });
+    var mapFun = data.map(function(x){
+      var datum = Number(x['Return'].replace(',',''));
+      return datum;
+    });
 
-    var date = file[i]['Date'];
+    date = file[i]['Date'];
     var price = file[i]['S&P Price'];
 
-    $('#date').html(parseDate(date));
+
+   var setTracker = function(){
+      console.log('called!')
+      $('#timeline svg').remove();
+      var year = Math.floor(Number(date.replace(',','')));
+      var event = {
+        'start': year,
+        'end':year
+      }
+      tl.draw(event);
+
+      var points = [420,516,696,816,1212,1392,1548,1632,24];
+      points.forEach(function(point,index){
+        var item = $('.timeline-event-item')[index+1];
+        $(item).click(function(){
+          counter = point;
+        });
+      });
+    }
+
+    //reset tracker each 12 months or on click
+    if (parseDate(date).indexOf('January') !== -1){
+      setTracker();
+      clickBool = false;
+    }
+    if(counter%1 == 0){
+      if (clickBool){
+        setTracker();
+        clickBool = false;
+      }
+    }
 
 
     var hist = d3.layout.histogram()
