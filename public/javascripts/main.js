@@ -51,7 +51,9 @@ var play = function(){
   renderPoint(counter);
 }
 
-  d3.csv('/resources/S&P.csv', function(file){
+
+
+d3.csv('/resources/S&P.csv', function(file){
 
 
   // set parameters for canvas and axes
@@ -124,24 +126,27 @@ var play = function(){
 
   var tl = new timeline("timeline", context);
   // var year = Math.floor(Number(date.replace(',','')));
-  var event = {
-    'start': 1873,
-    'end':1873
-  }
-  tl.draw(event);
+  // var event = {
+  //   'start': 1873,
+  //   'end':1873
+  // }
+  tl.draw();
+
+  // var tsContainter = d3.select('#timeCircle')
+  //                  .append('svg')
+  //                  .attr('height','10')
+  // var timeCircle = d3.select('#timeCircle')
+  //                .append('svg')
+  //                .append('')
+
 
 
   //THIS MAKES TIMELINE RESPONSIVE
   $(window).resize(function(){
     $('#timeline svg').remove();
     var year = Math.floor(Number(date.replace(',','')));
-    var event = {
-      'start': year,
-      'end':year
-      }
-    tl.draw(event);
-
-    //var events = d3.select('timeline-event timeline-event-item');
+    tl.draw();
+    tl.draw_arrow(year);
 
     var points = [420,516,696,816,1212,1392,1548,1632,24];
     points.forEach(function(point,index){
@@ -226,14 +231,11 @@ var play = function(){
 
 
    var setTracker = function(){
-      console.log('called!')
-      $('#timeline svg').remove();
+      //console.log('called!')
       var year = Math.floor(Number(date.replace(',','')));
-      var event = {
-        'start': year,
-        'end':year
-      }
-      tl.draw(event);
+      d3.select('#undefined-head').remove();
+      d3.select('#undefined-shaft').remove();
+      tl.draw_arrow(year);
 
       var points = [420,516,696,816,1212,1392,1548,1632,24];
       points.forEach(function(point,index){
