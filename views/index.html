@@ -6,12 +6,12 @@
     <script type="text/javascript" src="javascripts/d3.timeline.event-horizon.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
 
 
   </head>
   <body>
-
     <script src="javascripts/main.js"></script>
     <a href="https://github.com/NathanEpstein/StockVisD3"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
     <div class='row jumbotron'>
@@ -19,6 +19,7 @@
         <h1>S&P Through History</h1>
       </div>
       <div id="ctrl">
+        <span id='help' class='glyphicon glyphicon-question-sign'></span>
         <span class='glyphicon glyphicon-pause' onclick="pause()"></span>
         <span class='glyphicon glyphicon-play' onclick="play()"></span>
         <!-- <label for=fader>Speed</label> -->
@@ -30,4 +31,24 @@
       <div id="hist" class="col-lg-6 col-sm-12"></div>
     </div>
   </body>
+
+    <!-- MODAL BELOW -->
+  <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-body">
+        <h1 class='modal-header'>About</h1>
+        <p>D3 visualization of the S&P index (US stock market) since 1873.</p>
+        <p>At each month since January 1873, it shows trailing 24 months of returns in histogram and standard time-series plot.</p>
+        <p>Histogram colors indicate the direction of the market (blue for upward trend vs. red for downward trend).</p>
+        <h1 class='modal-header'>How To Use</h1>
+        <p>Top menu has 'play' and 'pause' buttons which control the animation. The slider below controls the speed of the visualization. On the timeline, event names can be clicked to move the visualization to that point in history.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END MODAL -->
+
+
 </html>

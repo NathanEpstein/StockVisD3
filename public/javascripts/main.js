@@ -15,6 +15,13 @@ var setSpeed = function(value){
   speed = 500 - value;
 }
 
+$(window).load(function(){
+  $('#help').on('click',function(){
+    $('#myModal').modal('show');
+  });
+});
+
+
 var clickBool = false;
 $(window).click(function(){
   clickBool = true;
@@ -31,16 +38,6 @@ var lines;
 var pause = function(){
   running = false;
 }
-var speedUp = function(){
-  if (speed > 100){
-    speed -= 100;
-  }
-}
-var slowDown = function(){
-  if (speed < 1000){
-    speed += 100
-  }
-}
 var play = function(){
   pause();
   bars.remove();
@@ -56,10 +53,7 @@ var play = function(){
 }
 
 
-
 d3.csv('/resources/S&P.csv', function(file){
-
-
   // set parameters for canvas and axes
   var heightScale = d3.scale.linear()
                     .domain([24,0])
@@ -89,7 +83,6 @@ d3.csv('/resources/S&P.csv', function(file){
         .attr('height', 350);
 
 
-
   var xLabel = canvas.append("text")
               .attr("class", "x label")
               .attr("text-anchor", "end")
@@ -102,12 +95,9 @@ d3.csv('/resources/S&P.csv', function(file){
               .attr("text-anchor", "end")
               .attr("y", 9)
               .attr('x', -100)
-              // .attr("dy", "100")
               .attr("transform", "rotate(-90)")
               .text("Frequency");
 
-  //CANVAS TRANSLATIONS DO NOT ADJUST DYNAMICALLY
-  //PADDING: 25PX ABOVE AND BELOW AXES, 50PX ON THE LEFT
   canvas.append('g')
     .attr('transform', 'translate(50,225)')
     .call(xAxis);
@@ -129,21 +119,8 @@ d3.csv('/resources/S&P.csv', function(file){
     ];
 
   var tl = new timeline("timeline", context);
-  // var year = Math.floor(Number(date.replace(',','')));
-  // var event = {
-  //   'start': 1873,
-  //   'end':1873
-  // }
+
   tl.draw();
-
-  // var tsContainter = d3.select('#timeCircle')
-  //                  .append('svg')
-  //                  .attr('height','10')
-  // var timeCircle = d3.select('#timeCircle')
-  //                .append('svg')
-  //                .append('')
-
-
 
   //THIS MAKES TIMELINE RESPONSIVE
   $(window).resize(function(){
@@ -159,10 +136,7 @@ d3.csv('/resources/S&P.csv', function(file){
         counter = point;
       });
     });
-
-
   });
-
 
   // define functions for use within renderPoint
   var months = ['January','February','March','April', 'May', 'June','July','August', 'September', 'October', 'November', 'December'];
