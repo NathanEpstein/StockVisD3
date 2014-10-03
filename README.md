@@ -20,4 +20,4 @@ http://d3stockmarket.herokuapp.com/
 4. Go to localhost:3000
 
 #Note to developers
-Forks and pull requests welcome. That said, expediency in creating a working product was the priority - the code base may reflect this.
+Forks and pull requests welcome. Please note that expediency in creating a working product was the priority so the code base may be somewhat disorganized. Many thanks for any contributions.
