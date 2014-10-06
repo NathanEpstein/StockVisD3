@@ -1,4 +1,4 @@
-Market
+StockVisD3
 ==============
 #About
 D3 visualization of the S&P index (US stock market) since 1873.
