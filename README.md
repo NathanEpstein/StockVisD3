@@ -18,6 +18,3 @@ http://d3stockmarket.herokuapp.com/
 2. `npm install`
 3. `npm start`
 4. Go to localhost:3000
-
-#Note to developers
-Forks and pull requests welcome. Many thanks for any contributions.
